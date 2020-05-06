@@ -24,12 +24,12 @@ services:
 #    env_file:
 #      - ./appcomposer_env.file
     environment:
-      spring.profiles.active: test
-      config.server.host: cornelius
-      config.server.port: 8888
-      config.server.user.name: cornelius
-      config.server.user.password: cornelius
-      appcomposer.caramel.enabled: true 
+      - spring.profiles.active=test
+      - config.server.host=cornelius
+      - config.server.port=8888
+      - config.server.user.name=cornelius
+      - config.server.user.password=cornelius
+      - appcomposer.caramel.enabled=true 
     ports:
       - "8080:8080"
 
