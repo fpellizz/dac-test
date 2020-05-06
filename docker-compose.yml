@@ -7,9 +7,42 @@ services:
 #    env_file:
 #      - ./cornelius_env.file
     environment:
-      spring.profiles.active: native
-      config.server.user.name: cornelius
-      config.server.user.password: cornelius
+      - spring.profiles.active=native
+      - config.server.user.name=cornelius
+      - config.server.user.password=cornelius
+#appcomposer.property {copy,configure,none} 
+# copy: legge i valori presenti nell'env del docker-compose.yml e li copia sul file /usr/src/cornelius/properties/appcomposer.properties
+# configure: legge i valori presenti nell'env del docker-compose.yml effettua alcune modifiche
+# none: utilizza la direttiva "volumes" e monta il file esterno nel path /usr/src/cornelius/properties/appcomposer.properties
+      - appcomposer.properties=copy
+      - appcomposer.properties.file.init=#Fri Nov 08 16:00:52 UTC 2019
+      - appcomposer.properties.file.token.endpoint=http\://localhost\:8083/oauth/token
+      - appcomposer.properties.file.redirect.uri=http\://192.168.102.209\:8080/index.cas
+      - appcomposer.properties.file.user.info.endpoint=http\://localhost\:8083/Users
+      - appcomposer.properties.file.oc.loginRedirectUri=http\://192.168.102.209\:8080/index.cas
+      - appcomposer.properties.file.oc.checkTokenEndpoint=http\://192.168.102.209\:8083/introspect
+      - appcomposer.properties.file.oc.userInfoEndpoint=http\://192.168.102.209\:8083/userinfo
+      - appcomposer.properties.file.oc.jwkEndpoint=http\://192.168.102.209\:8083/token_keys
+      - appcomposer.properties.file.check.token.endpoint=http\://localhost\:8083/check_token
+      - appcomposer.properties.file.metadata.user=appcomposer
+      - appcomposer.properties.file.authorization.endpoint=http\://localhost\:8083/oauth/authorize
+      - appcomposer.properties.file.metadata.driver=org.postgresql.Driver
+      - appcomposer.properties.file.metadata.url=jdbc\:postgresql\://postgresql\:5432/appcomposer?currentSchema\=appcomposer
+      - appcomposer.properties.file.service.metadata.name=metadata
+      - appcomposer.properties.file.metadata.port=5432
+      - appcomposer.properties.file.metadata.schema=appcomposer
+      - appcomposer.properties.file.client.secret=appcomposer
+      - appcomposer.properties.file.oc.userIdentifierClaim=sub
+      - appcomposer.properties.file.client.id=appcomposer
+      - appcomposer.properties.file.metadata.password=appcomposer
+      - appcomposer.properties.file.oc.tokenEndpoint=http\://192.168.102.209\:8083/oauth/token
+      - appcomposer.properties.file.metadata.database=appcomposer
+      - appcomposer.properties.file.oc.logoutEndpoint=http\://192.168.102.209\:8083/logout.do
+      - appcomposer.properties.file.service.openConnect.name=openConnect
+      - appcomposer.properties.file.oc.authorizationEndpoint=http\://192.168.102.209\:8083/oauth/authorize
+      - appcomposer.properties.file.metadata.host=postgresql
+      - appcomposer.properties.file.uaa.url=http\://192.168.102.209:8083
+      - appcomposer.properties.file.keymaster.url=http\://localhost:8080
     volumes:
       - "./appcomposer.properties:/usr/src/cornelius/properties/appcomposer.properties"
     ports:
