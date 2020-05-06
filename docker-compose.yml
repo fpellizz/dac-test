@@ -1,0 +1,86 @@
+version: '3'
+
+services:
+  cornelius:
+    image: decisyon-dac-docker.jfrog.io/com.decisyon.cornelius:MATILDA-SNAPSHOT
+    container_name: cornelius_J
+#    env_file:
+#      - ./cornelius_env.file
+    environment:
+      - spring.profiles.active=native
+      - config.server.user.name=cornelius
+      - config.server.user.password=cornelius
+    volumes:
+      - "./appcomposer.properties:/usr/src/cornelius/properties/appcomposer.properties"
+    ports:
+      - "8888:8888"
+
+  appcomposer:
+    image: decisyon-dac-docker.jfrog.io/com.decisyon.appcomposer-home:JAKE.1-SNAPSHOT
+    container_name: appcomposer_j
+    depends_on:
+      - "cornelius"
+    command: ["wait-for-it.sh", "cornelius:8888/actuator/healtz", "--timeout=60", "-q", "--", "start.sh" ]
+#    env_file:
+#      - ./appcomposer_env.file
+    environment:
+      - spring.profiles.active=test
+      - config.server.host=cornelius
+      - config.server.port=8888
+      - config.server.user.name=cornelius
+      - config.server.user.password=cornelius
+      - appcomposer.caramel.enabled=true 
+    ports:
+      - "8080:8080"
+
+  caramel:
+    image: decisyon-dac-docker.jfrog.io/com.decisyon.caramel:JAKE-SNAPSHOT
+    container_name: caramel_j
+    env_file:
+      - ./caramel_env.file
+    ports:
+      - "8083:8080"
+
+  postgresql:
+    image: decisyon-docker.jfrog.io/dac-postgres-9.6:v0.3
+    container_name: postgresql_j
+    environment:
+      POSTGRES_PASSWORD: Latina,1
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      DCY_DBNAME: appcomposer
+      DCY_USER: appcomposer
+      DCY_PASSWORD: appcomposer
+      DCY_CARAMEL_USER: caramel
+      DCY_CARAMEL_PASSWORD: caramel
+      DCY_CARAMEL_DBNAME: caramel
+      CHECK_DB: check_db
+    volumes:
+     - postgresdata:/var/lib/postgresql/data
+    ports:
+     - "5432:5432"
+
+  pgadmin4:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_dac-doc_j
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: Latina,1
+      PGADMIN_DEFAULT_EMAIL: admin
+    ports:
+     - "8880:80"
+     
+
+  appcomposer-sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: dacsqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Latina,1
+    ports:
+      - 1433:1433
+      
+      
+volumes:
+  postgresdata:
+    driver: local
+  

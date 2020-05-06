@@ -1,0 +1,6 @@
+spring.profiles.active=test
+config.server.host=cornelius
+config.server.port=8888
+config.server.user.name=cornelius
+config.server.user.password=cornelius
+appcomposer.caramel.enabled=true
