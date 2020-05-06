@@ -1,15 +1,15 @@
-version: '3'
+version: '2'
 
 services:
   cornelius:
     image: decisyon-dac-docker.jfrog.io/com.decisyon.cornelius:MATILDA-SNAPSHOT
-    container_name: cornelius_J
+    container_name: cornelius
 #    env_file:
 #      - ./cornelius_env.file
     environment:
-      - spring.profiles.active=native
-      - config.server.user.name=cornelius
-      - config.server.user.password=cornelius
+      - spring.profiles.active: native
+      - config.server.user.name: cornelius
+      - config.server.user.password: cornelius
     volumes:
       - "./appcomposer.properties:/usr/src/cornelius/properties/appcomposer.properties"
     ports:
@@ -17,27 +17,41 @@ services:
 
   appcomposer:
     image: decisyon-dac-docker.jfrog.io/com.decisyon.appcomposer-home:JAKE.1-SNAPSHOT
-    container_name: appcomposer_j
+    container_name: appcomposer
     depends_on:
       - "cornelius"
     command: ["wait-for-it.sh", "cornelius:8888/actuator/healtz", "--timeout=60", "-q", "--", "start.sh" ]
 #    env_file:
 #      - ./appcomposer_env.file
     environment:
-      - spring.profiles.active=test
-      - config.server.host=cornelius
-      - config.server.port=8888
-      - config.server.user.name=cornelius
-      - config.server.user.password=cornelius
-      - appcomposer.caramel.enabled=true 
+      - spring.profiles.active: test
+      - config.server.host: cornelius
+      - config.server.port: 8888
+      - config.server.user.name: cornelius
+      - config.server.user.password: cornelius
+      - appcomposer.caramel.enabled: true 
     ports:
       - "8080:8080"
 
   caramel:
     image: decisyon-dac-docker.jfrog.io/com.decisyon.caramel:JAKE-SNAPSHOT
-    container_name: caramel_j
-    env_file:
-      - ./caramel_env.file
+    container_name: caramel
+#    env_file:
+#      - ./caramel_env.file
+    environment:
+      - REDIRECT_URI: http://192.168.102.209:8080/index.cas
+      - LOGOUT_REDIRECT_URI: http://192.168.102.209:8080/
+      - ZONE_ID: 192.168.102.209
+      - APPCOMPOSER_CLIENT_PWD: appcomposer
+      - APPCOMPOSER_CLIENT_ID: appcomposer
+      - ADMINISTRATOR_USERNAME: administrator
+      - ADMINISTRATOR_PWD: Administrator
+      - db_scheme: postgresql
+      - db_username: caramel
+      - db_password: caramel
+      - db_host: postgresql
+      - db_port: 5432
+      - db_name: caramel
     ports:
       - "8083:8080"
 
