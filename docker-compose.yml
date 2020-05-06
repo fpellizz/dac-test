@@ -43,8 +43,8 @@ services:
       - appcomposer.properties.file.metadata.host=postgresql
       - appcomposer.properties.file.uaa.url=http\://192.168.102.209:8083
       - appcomposer.properties.file.keymaster.url=http\://localhost:8080
-    volumes:
-      - "./appcomposer.properties:/usr/src/cornelius/properties/appcomposer.properties"
+#    volumes:
+#      - "./appcomposer.properties:/usr/src/cornelius/properties/appcomposer.properties"
     ports:
       - "8888:8888"
 
